@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Report</title>
+
+	<link href="https://fonts.googleapis.com/css?family=Architects+Daughter|Handlee|Nanum+Pen+Script|Patrick+Hand|Quicksand" rel="stylesheet">
+	<link href="Content/reportcss.css" rel="stylesheet" />
+
+	<script src="Scripts/jquery-3.3.1.min.js"></script>
+
+
+</head>
+<body>
+	<div class="wall">
+		<h1>
+			Inverntory Report
+		</h1>
+
+		<div>
+			<div class="left box" id="itemtype"></div>
+			<div class="right box" id="qtybytype"></div>
+		</div>
+	</div>
+</body>
+</html>
+
+<script>
+	
+	$(document).ready(function () {
+
+
+		var types = [];
+		var qtys = [];
+		var itemByType;
+		
+		var test = [];
+		var data = 'http://localhost:11925/api/groceryitem?type=all';
+
+		function noDupes(...args) {
+			return [].concat(...args).filter((v, i, arr) => arr.indexOf(v) == i);
+		}
+
+
+		$.getJSON(data, function (abc) {
+
+			//count = abc.length;
+
+			//for (i = 0; i < count; i++) {
+			//	types.push(abc[i].ItemType);
+			//}
+
+			//for (j = 0; j < n; j++{
+			//	if (abc[k].ItemType === noDupes(types)[k])
+			//	types.push(abc[j].ItemQuantity);
+			//}
+
+
+			itemByType = Object.values(abc.reduce(function (result, current) {
+				result[current.ItemType] = result[current.ItemType] || [];
+				result[current.ItemType].push(current);
+				return result;
+			}, {}));
+
+			
+
+			console.log(itemByType[1][0].ItemQuantity);
+			
+			
+
+
+			for (i = 0; i < itemByType.length; i++) {
+				//types.push(itemByType[i][0].ItemType);
+
+				//for (j = 0; j < itemByType[i].length; j++){
+				//	test1[i].push(itemByType[i][j].ItemQuantity);
+				//	test = itemByType[i][j].ItemQuantity + test;
+				//}
+
+				itemByType[i].reduce(function (res, value) {
+					if (!res[value.ItemType]) {
+						res[value.ItemType] = { Type: value.ItemType, ItemQuantity: 0 };
+						test.push(res[value.ItemType])
+					}
+					res[value.ItemType].ItemQuantity += value.ItemQuantity;
+					return res;
+				}, {});
+
+			
+
+
+
+			}
+
+			for (j = 0; j < test.length; j++) {
+
+				types.push(test[j].Type);
+				qtys.push(test[j].ItemQuantity);
+			}
+
+
+			function concatNarrays(args) {
+				args = Array.prototype.slice.call(arguments);
+				var newArr = args.reduce(function (prev, next) {
+					return prev.concat(next);
+				});
+
+				return newArr;
+			}
+
+
+			console.log(concatNarrays(types));
+			//itemByType[i].reduce
+
+			//$("#test").html(noDupes(types).join(('<br>')));
+			
+			//$("#itemtype").html(test[0].join('<br>'));
+			$("#itemtype").html(types.join(' :' + '<br>') + ' :');
+			$("#qtybytype").html(qtys.join('<br>'));
+			
+		});
+
+
+
+
+
+	});
+
+
+
+</script>

@@ -1,0 +1,44 @@
+﻿h3 {
+	background: rgba(172,187,180,0.5);
+	/*background:rgba(248,197,197,0.5);*/
+	
+	
+	text-align: left;
+	
+	
+}
+
+
+body {
+	
+}
+
+.wall {
+	margin-left: 50%;
+	
+	
+	background-color: rgba(224,245,238,0.6);
+	
+}
+
+.left {
+	width: 30%;
+	
+	font-weight: bold;
+}
+
+.right {
+	width: 25%;
+	margin-left: 5px;
+	
+}
+
+.box {
+	padding: 20px;
+	text-align: left;
+	display: inline-table;
+	position: relative;
+	vertical-align: top;
+	font-family: DengXian;
+	font-size: 20px;
+}

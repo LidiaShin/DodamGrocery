@@ -1,0 +1,56 @@
+﻿@model DodamGroceryMVC.Models.mvcGroceryItemModel
+@{
+	ViewBag.Title = "AddOrEdit";
+}
+
+<div class="form-body">
+	@using (Html.BeginForm())
+	{
+		@Html.HiddenFor(model => model.ID)
+		<div class="form-group">
+			@Html.LabelFor(model => model.ItemType)
+			@Html.EditorFor(model => model.ItemType)
+			@Html.ValidationMessageFor(model => model.ItemType)
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(model => model.ItemName)
+			@Html.EditorFor(model => model.ItemName)
+			@Html.ValidationMessageFor(model => model.ItemName)
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(model => model.ItemPurchasedPrice)
+			@Html.EditorFor(model => model.ItemPurchasedPrice)
+			@Html.ValidationMessageFor(model => model.ItemPurchasedPrice)
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(model => model.ItemRetailPrice)
+			@Html.EditorFor(model => model.ItemRetailPrice)
+			@Html.ValidationMessageFor(model => model.ItemRetailPrice)
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(model => model.ItemQuantity)
+			@Html.EditorFor(model => model.ItemQuantity)
+			@Html.ValidationMessageFor(model => model.ItemQuantity)
+		</div>
+
+
+		<div class="form-group">
+			<input type="submit" value="Done" class="btn button" />
+			<input type="reset" value="Reset" class="btn button" />
+		</div>
+
+	}
+
+
+
+
+</div>
+
+
+@section scripts{
+	@Scripts.Render("~/bundles/jqueryval");
+}

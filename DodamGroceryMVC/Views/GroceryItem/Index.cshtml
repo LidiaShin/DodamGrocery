@@ -1,0 +1,198 @@
+﻿@model IEnumerable<DodamGroceryMVC.Models.mvcGroceryItemModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<br/>
+
+<p>
+	<a href="@Url.Action("AddOrEdit","GroceryItem")" class="btn btn-default"><i class="fa fa-plus"></i> Register New Item</a> 
+	
+</p>
+<table class="table table-striped">
+	<thead class="table-heading">
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.ItemType)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.ItemName)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.ItemPurchasedPrice)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.ItemRetailPrice)
+			</th>
+
+			<th>
+				@Html.DisplayNameFor(model => model.ItemQuantity)
+			</th>
+
+			<th>Action</th>
+		</tr>
+	</thead>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ItemType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ItemName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ItemPurchasedPrice)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ItemRetailPrice)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ItemQuantity)
+        </td>
+      
+		<td>
+
+
+			<a href="@Url.Action("AddOrEdit", "GroceryItem", new { id = item.ID})" class="btn btn-default"><i class="fa fa-pencil"></i>  Edit</a>
+
+			<a onclick="Delete(@item.ID)" class="btn btn-default"><i class="fa fa-trash"></i>  Delete</a>
+			
+		</td>
+    </tr>
+}
+
+</table>
+
+<div class="wall">
+	<h3>
+		Quantity Summary
+	</h3>
+
+	<div>
+		<div class="left box" id="itemtype"></div>
+		<div class="right box" id="qtybytype"></div>
+	</div>
+</div>
+
+
+
+@section scripts{
+	<script>
+
+		$(function () {
+
+			var successMessage = '@TempData["SuccessMessage"]'
+			if (successMessage != '')
+				alertify.success(successMessage);
+
+		});
+
+
+		 function Delete(id) {
+            alertify.confirm('Warning! ','Are You Sure to Delete this Record ?',function(){
+                window.location.href  = '@Url.Action("Delete","GroceryItem")/'+id;
+            },null );
+        }
+
+
+		function Report() {
+
+			window.open('/ReportPage.html', '_blank', 'width=600,height=380,title=yes,toolbar=no,location=no,resizable=no,status=no');
+
+		}
+
+
+
+
+
+
+
+		$(document).ready(function () {
+
+
+			var types = [];
+			var qtys = [];
+			var itemByType;
+
+			var test = [];
+			var data = 'http://localhost:11925/api/groceryitem?type=all';
+
+			function noDupes(...args) {
+				return [].concat(...args).filter((v, i, arr) => arr.indexOf(v) == i);
+			}
+
+
+			$.getJSON(data, function (abc) {
+
+			
+
+
+				itemByType = Object.values(abc.reduce(function (result, current) {
+					result[current.ItemType] = result[current.ItemType] || [];
+					result[current.ItemType].push(current);
+					return result;
+				}, {}));
+
+
+
+				console.log(itemByType[1][0].ItemQuantity);
+
+
+
+
+				for (i = 0; i < itemByType.length; i++) {
+					
+					itemByType[i].reduce(function (res, value) {
+						if (!res[value.ItemType]) {
+							res[value.ItemType] = { Type: value.ItemType, ItemQuantity: 0 };
+							test.push(res[value.ItemType])
+						}
+						res[value.ItemType].ItemQuantity += value.ItemQuantity;
+						return res;
+					}, {});
+
+
+
+
+
+				}
+
+				for (j = 0; j < test.length; j++) {
+
+					types.push(test[j].Type);
+					qtys.push(test[j].ItemQuantity);
+				}
+
+
+				function concatNarrays(args) {
+					args = Array.prototype.slice.call(arguments);
+					var newArr = args.reduce(function (prev, next) {
+						return prev.concat(next);
+					});
+
+					return newArr;
+				}
+
+
+				console.log(concatNarrays(types));
+				
+				$("#itemtype").html(types.join(' :' + '<br>') + ' :');
+				$("#qtybytype").html(qtys.join('<br>'));
+
+			});
+
+
+
+
+
+		});
+
+
+
+
+	</script>
+
+	
+}
